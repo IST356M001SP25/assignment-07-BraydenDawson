@@ -1,40 +1,37 @@
-from dataclasses import dataclass, asdict
+# menuitemextractor.py
+import re
+from code.menuitem import MenuItem
 
-@dataclass
-class MenuItem:
-    # these are built-in properties
-    category: str
-    name: str
-    price: float
-    description: str
+UNWANTED = {"NEW", "NEW!", "GS", "V", "P", "S"}
 
-    # convert to a dictionary
-    def to_dict(self):
-        return asdict(self)
+def clean_price(text: str) -> float:
+    clean = text.strip().replace("$", "").replace(",", "")
+    return float(clean)
 
-    @staticmethod
-    def from_dict(data):
-        return MenuItem(**data)
-    
-if __name__=='__main__':
-    # example of howto use the dataclass
+def clean_scraped_text(text: str) -> list[str]:
+    lines = text.strip().splitlines()
+    cleaned = []
+    for line in lines:
+        line = line.strip()
+        if line and line not in UNWANTED:
+            cleaned.append(line)
+    return cleaned
 
-    # create a new MenuItem    
-    mozz = MenuItem(name = "Mozzarella Sticks", 
-                    price = 8.99, 
-                    category="Apps", 
-                    description="Fried cheese sticks served with marinara sauce.")
+def extract_menu_item(category: str, raw_text: str) -> MenuItem:
+    lines = clean_scraped_text(raw_text)
 
-    # can assign a new category
-    mozz.category = "Appetizers"
-    print(mozz)
-    # convert back to a dictionary
-    print(mozz.to_dict())
+    name = lines[0]
+    price_line = next((line for line in lines if "$" in line or re.match(r"\d+(\.\d+)?", line)), None)
+    description = " ".join(line for line in lines if line not in [name, price_line]).strip()
 
-    # create a new MenuItem from a dictionary
-    burger = MenuItem.from_dict({"name": "Burger", 
-                                 "price": 9.99, 
-                                 "description": "A delicious burger.", 
-                                 "category": "Entrees"})
-    print(burger)
+    if not description:
+        description = "No description available."
 
+    price = clean_price(price_line) if price_line else 0.0
+
+    return MenuItem(
+        category=category,
+        name=name,
+        price=price,
+        description=description
+    )
