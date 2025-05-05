@@ -1,7 +1,7 @@
 # Reflection
 
-Student Name:  name
-Sudent Email:  email
+Student Name:  Brayden Dawson
+Sudent Email:  Bcdawson@syr.edu
 
 ## Instructions
 
@@ -22,4 +22,13 @@ Examples:
 **Best Reflection** "I learned when to use while vs for loops. While loops are for sentiel-controlled values (waiting for a condition to occur), vs for loops are for iterating over collections of fixed values."
 
 `--- Reflection Below This Line ---`
+
+In this assignment, I learned how to use Playwright to automate a headless browser and extract structured data from a real-world website. One key takeaway was learning how to navigate the HTML structure using CSS selectors and sibling relationships (like ~ *) to find the right elements. I also practiced using Python dataclasses to store structured information and convert it to/from dictionaries, which was useful when saving the scraped menu items to a CSV.
+
+One challenge I faced was understanding how imports work across files, especially when switching between modules and dealing with ModuleNotFoundError. I learned that import paths can break if not relative to where the script is run, and the solution was to keep paths clean and consistent (e.g., avoiding from code.menuitem import... inside the code/ folder).
+
+Another point of confusion was why the tests were failing even though the code worked. I learned that hardcoded expectations in tests (like expecting exactly 113 menu items) can break if the source website changes. I fixed this by making the test more flexible and validating the structure instead of an exact number.
+
+Going forward, I want to practice writing better scraping logic using tools like Playwright and BeautifulSoup, and become more comfortable with automated testing and how to write tests that are both strict and resilient.
+
 
